@@ -1078,19 +1078,19 @@ local function RunInFloatingTerminal(cmd)
 end
 
 vim.keymap.set("n", "<leader>rc", function()
-	RunInFloatingTerminal("cargo check")
+	RunInFloatingTerminal("cls && cargo check")
 end, { desc = "Cargo check" })
 
 vim.keymap.set("n", "<leader>rb", function()
-	RunInFloatingTerminal("cargo build")
+	RunInFloatingTerminal("cls && cargo build")
 end, { desc = "Cargo build" })
 
 vim.keymap.set("n", "<leader>rr", function()
-	RunInFloatingTerminal("cargo run")
+	RunInFloatingTerminal("cls && cargo run")
 end, { desc = "Cargo run" })
 
 vim.keymap.set("n", "<leader>rt", function()
-	RunInFloatingTerminal("cargo test")
+	RunInFloatingTerminal("cls && cargo test")
 end, { desc = "Cargo test" })
 
 vim.api.nvim_create_autocmd("TermOpen", {
