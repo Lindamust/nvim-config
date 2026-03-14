@@ -1,4 +1,5 @@
--- =============vim.opt.termguicolors = true
+-- =============
+vim.opt.termguicolors = true
 vim.cmd.colorscheme("lunaperche")
 
 local function set_transparent() -- set UI component to transparent
@@ -324,7 +325,7 @@ local augroup = vim.api.nvim_create_augroup("UserConfig", { clear = true })
 vim.api.nvim_create_autocmd("BufWritePre", {
 	group = augroup,
 	pattern = {
-    "*.rs",
+		"*.rs",
 		"*.lua",
 		"*.py",
 		"*.go",
@@ -910,12 +911,13 @@ local function FloatingTerminal()
 	local has_terminal = false
 	local lines = vim.api.nvim_buf_get_lines(terminal_state.buf, 0, -1, false)
 	for _, line in ipairs(lines) do
-		if line ~= "" then vim.keymap.set("n", "K", function()
-	local ok = pcall(vim.cmd.RustLsp, "expandMacro")
-	if not ok then
-		vim.cmd.RustLsp({ "hover", "actions" })
-	end
-end, { desc = "Rust hover or macro expand" })
+		if line ~= "" then
+			vim.keymap.set("n", "K", function()
+				local ok = pcall(vim.cmd.RustLsp, "expandMacro")
+				if not ok then
+					vim.cmd.RustLsp({ "hover", "actions" })
+				end
+			end, { desc = "Rust hover or macro expand" })
 			has_terminal = true
 			break
 		end
@@ -1124,3 +1126,4 @@ end, { desc = "Open Rust docs" })
 vim.keymap.set("n", "<leader>rT", function()
 	RunInFloatingTerminal("cargo tree")
 end, { desc = "Cargo dependency tree" })
+
