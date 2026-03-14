@@ -913,9 +913,9 @@ local function FloatingTerminal()
 	for _, line in ipairs(lines) do
 		if line ~= "" then
 			vim.keymap.set("n", "K", function()
-				local ok = pcall(vim.cmd.RustLsp, "expandMacro")
+				local ok = pcall(vim.cmd, "RustLsp expandMacro")
 				if not ok then
-					vim.cmd.RustLsp({ "hover", "actions" })
+					vim.cmd("RustLsp hover actions")
 				end
 			end, { desc = "Rust hover or macro expand" })
 			has_terminal = true
@@ -956,9 +956,17 @@ end, { noremap = true, silent = true, desc = "Close floating terminal" })
 -- ================================
 
 -- Better LSP floating windows
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
+vim.lsp.handlers["textDocument/hover"] = function(_, result, ctx, config)
+	config = config or {}
+	config.border = "rounded"
+	return vim.lsp.handlers.hover(_, result, ctx, config)
+end
 
-vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
+vim.lsp.handlers["textDocument/signatureHelp"] = function(_, result, ctx, config)
+	config = config or {}
+	config.border = "rounded"
+	return vim.lsp.handlers.signature_help(_, result, ctx, config)
+end
 
 -- rustaceanvim config
 vim.g.rustaceanvim = {
@@ -988,31 +996,31 @@ vim.g.rustaceanvim = {
 			map("n", "gr", vim.lsp.buf.references, "Goto references")
 
 			map("n", "K", function()
-				vim.cmd.RustLsp({ "hover", "actions" })
+				vim.cmd("RustLsp hover actions")
 			end, "Rust hover actions")
 
 			map("n", "<leader>rn", vim.lsp.buf.rename, "Rename symbol")
 			map("n", "<leader>ca", function()
-				vim.cmd.RustLsp("codeAction")
+				vim.cmd("RustLsp codeAction")
 			end, "Code actions")
 
 			-- =================
 			-- Rust tools
 			-- =================
 			map("n", "<leader>rr", function()
-				vim.cmd.RustLsp("runnables")
+				vim.cmd("RustLsp runnables")
 			end, "Rust runnables")
 
 			map("n", "<leader>rd", function()
-				vim.cmd.RustLsp("debuggables")
+				vim.cmd("RustLsp debuggables")
 			end, "Rust debuggables")
 
 			map("n", "<leader>rt", function()
-				vim.cmd.RustLsp("testables")
+				vim.cmd("RustLsp testables")
 			end, "Rust testables")
 
 			map("n", "<leader>re", function()
-				vim.cmd.RustLsp("expandMacro")
+				vim.cmd("RustLsp expandMacro")
 			end, "Expand macro")
 
 			map("n", "<leader>rh", function()
@@ -1092,14 +1100,14 @@ vim.api.nvim_create_autocmd("TermOpen", {
 })
 
 vim.keymap.set("n", "K", function()
-	local ok = pcall(vim.cmd.RustLsp, "expandMacro")
+	local ok = pcall(vim.cmd, "RustLsp expandMacro")
 	if not ok then
-		vim.cmd.RustLsp({ "hover", "actions" })
+		vim.cmd("RustLsp hover actions")
 	end
 end, { desc = "Rust hover or macro expand" })
 
 vim.keymap.set("n", "<leader>ri", function()
-	vim.cmd.RustLsp("hover", "actions")
+	vim.cmd("RustLsp hover actions")
 end, { desc = "Inspect Rust type" })
 
 vim.keymap.set("n", "<leader>rp", function()
@@ -1120,7 +1128,7 @@ vim.keymap.set("n", "<leader>rn", function()
 end, { desc = "Run tests with output" })
 
 vim.keymap.set("n", "<leader>rd", function()
-	vim.cmd.RustLsp("openDocs")
+	vim.cmd("RustLsp openDocs")
 end, { desc = "Open Rust docs" })
 
 vim.keymap.set("n", "<leader>rT", function()
