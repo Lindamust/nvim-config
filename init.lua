@@ -856,6 +856,7 @@ vim.lsp.enable({
 -- ============================================================================
 -- FLOATING TERMINAL
 -- ============================================================================
+
 vim.api.nvim_create_autocmd("TermClose", {
 	group = augroup,
 	callback = function()
@@ -922,8 +923,11 @@ local function FloatingTerminal()
 			break
 		end
 	end
-	if not has_terminal then
-		vim.fn.termopen(vim.o.shell, {
+	local job = vim.b[terminal_state.buf].terminal_job_id
+	if job == nil or vim.fn.jobwait({ job }, 0)[1] ~= -1 then
+		local shell = vim.fn.executable("pwsh") == 1 and "pwsh" or "powershell.exe"
+
+		vim.fn.termopen(shell, {
 			cwd = vim.loop.cwd(),
 		})
 	end
