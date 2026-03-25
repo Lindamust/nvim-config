@@ -119,11 +119,11 @@ local last_check = 0
 local function git_branch()
 	local now = vim.loop.now()
 	if now - last_check > 5000 then -- Check every 5 seconds
-		cached_branch = vim.fn.system("git branch --show-current 2>/dev/null | tr -d '\n'")
+		cached_branch = vim.fn.system("git branch --show-current")
 		last_check = now
 	end
 	if cached_branch ~= "" then
-		return " \u{e725} " .. cached_branch .. " " -- nf-dev-git_branch
+		return " \u{e725} " .. cached_branch .. " "
 	end
 	return ""
 end
@@ -1092,6 +1092,10 @@ end, { desc = "Cargo build" })
 vim.keymap.set("n", "<leader>rr", function()
 	RunInFloatingTerminal("cls && cargo run")
 end, { desc = "Cargo run" })
+
+vim.keymap.set("n", "<leader>rR", function()
+	RunInFloatingTerminal("cls && cargo run --release")
+end, { desc = "Cargo run release" })
 
 vim.keymap.set("n", "<leader>rt", function()
 	RunInFloatingTerminal("cls && cargo test")
